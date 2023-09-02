@@ -6,10 +6,10 @@ import {
 } from "../store/actions/studentAction";
 
 class StudentRegister extends Component {
-  idInputRef = createRef();
-  fullnameInputRef = createRef();
-  phoneInputRef = createRef();
-  emailInputRef = createRef();
+  idWarningRef = createRef();
+  fullnameWarningRef = createRef();
+  phoneWarningRef = createRef();
+  emailWarningRef = createRef();
 
   state = {
     id: "",
@@ -47,6 +47,23 @@ class StudentRegister extends Component {
     return false;
   };
 
+  checkExist = (value, ref, message, stdList) => {
+    let isExist = false;
+
+    const idx = stdList.findIndex((element) => element.id === value);
+
+    if (idx !== -1) {
+      isExist = true;
+    }
+
+    if (isExist) {
+      ref.innerHTML = message;
+      return false;
+    }
+    ref.innerHTML = "";
+    return true;
+  };
+
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
@@ -55,30 +72,39 @@ class StudentRegister extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+  };
 
+  handleAdd = () => {
     let isValid = true;
 
     isValid &= this.validateRequired(
       this.state.id,
-      this.idInputRef.current,
+      this.idWarningRef.current,
       "Student ID is required"
     );
+    // &&
+    //   this.checkExist(
+    //     this.state.id,
+    //     this.idWarningRef.current,
+    //     "Student ID is existed",
+    //     this.props.studentList
+    //   );
 
     isValid &= this.validateRequired(
       this.state.fullname,
-      this.fullnameInputRef.current,
+      this.fullnameWarningRef.current,
       "Student's fullname is required"
     );
 
     isValid &=
       this.validateRequired(
         this.state.phone,
-        this.phoneInputRef.current,
+        this.phoneWarningRef.current,
         "Student's phone number is required"
       ) &&
       this.validateWithRegex(
-        this.state.email,
-        this.emailInputRef.current,
+        this.state.phone,
+        this.phoneWarningRef.current,
         "Student's phone number is incorrect",
         /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/
       );
@@ -86,12 +112,12 @@ class StudentRegister extends Component {
     isValid &=
       this.validateRequired(
         this.state.email,
-        this.emailInputRef.current,
+        this.emailWarningRef.current,
         "Student's email is required"
       ) &&
       this.validateWithRegex(
         this.state.email,
-        this.emailInputRef.current,
+        this.emailWarningRef.current,
         "Student's email is incorrect",
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
       );
@@ -110,6 +136,8 @@ class StudentRegister extends Component {
       phone: "",
       email: "",
     });
+
+    // this.props.dispatch(addStudentAction(this.state));
   };
 
   render() {
@@ -131,7 +159,7 @@ class StudentRegister extends Component {
                 className="form-control"
                 placeholder="Student ID"
               />
-              <small ref={this.idInputRef} className="text-danger" />
+              <small ref={this.idWarningRef} className="text-danger" />
             </div>
 
             <div className="form-group col-12 col-xl-3 col-md-3">
@@ -144,7 +172,7 @@ class StudentRegister extends Component {
                 className="form-control"
                 placeholder="Full name"
               />
-              <small ref={this.fullnameInputRef} className="text-danger" />
+              <small ref={this.fullnameWarningRef} className="text-danger" />
             </div>
 
             <div className="form-group col-12 col-xl-3 col-md-3">
@@ -157,7 +185,7 @@ class StudentRegister extends Component {
                 className="form-control"
                 placeholder="Phone number"
               />
-              <small ref={this.phoneInputRef} className="text-danger" />
+              <small ref={this.phoneWarningRef} className="text-danger" />
             </div>
 
             <div className="form-group col-12 col-xl-3 col-md-3">
@@ -170,12 +198,16 @@ class StudentRegister extends Component {
                 className="form-control"
                 placeholder="Email"
               />
-              <small ref={this.emailInputRef} className="text-danger" />
+              <small ref={this.emailWarningRef} className="text-danger" />
             </div>
           </div>
 
           <div className="d-flex align-item-center justify-content-end">
-            <button type="submit" className="btn btn-success mr-3">
+            <button
+              type="button"
+              className="btn btn-success mr-3"
+              onClick={() => this.handleAdd()}
+            >
               SAVE
             </button>
 
@@ -191,6 +223,7 @@ class StudentRegister extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    studentList: state.studentReducer.studentList,
     selectedStudent: state.studentReducer.selected,
   };
 };
