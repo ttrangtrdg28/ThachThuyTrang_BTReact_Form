@@ -75,7 +75,6 @@ class StudentRegister extends Component {
   };
 
   handleValidate = (isCreate) => {
-    isCreate = true;
     let isValid = true;
 
     if (isCreate) {
