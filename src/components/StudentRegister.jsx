@@ -60,7 +60,7 @@ class StudentRegister extends Component {
   checkExist = (value, ref, message, stdList) => {
     let isExist = false;
 
-    const idx = stdList.findIndex((element) => element.id === value);
+    const idx = stdList.findIndex((element) => element.code === value);
 
     if (idx !== -1) {
       isExist = true;
@@ -75,6 +75,7 @@ class StudentRegister extends Component {
   };
 
   handleValidate = (isCreate) => {
+    isCreate = true;
     let isValid = true;
 
     if (isCreate) {
