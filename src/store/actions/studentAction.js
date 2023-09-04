@@ -1,8 +1,8 @@
 import {
   ADD_STUDENT,
-  DELETE_STUDENT,
   SET_SELECTED,
   UPDATE_STUDENT,
+  DELETE_STUDENT,
 } from "../types/studentType";
 
 export const addStudentAction = (data) => {

@@ -13,10 +13,10 @@ import { connect } from "react-redux";
 
 class Student extends Component {
   render() {
-    const { id, fullname, phone, email } = this.props.element;
+    const { fullname, phone, email } = this.props.element;
 
     return (
-      <tr>
+      <tr className={this.props.index % 2 === 0 ? "bg-light" : ""}>
         <td>{this.props.index + 1}</td>
         <td>{fullname}</td>
         <td>{phone}</td>
@@ -30,6 +30,7 @@ class Student extends Component {
           >
             <FontAwesomeIcon icon={faSquarePen} size="2x" />
           </button>
+
           <button
             className="btn text-danger ml-1 p-0"
             onClick={() =>

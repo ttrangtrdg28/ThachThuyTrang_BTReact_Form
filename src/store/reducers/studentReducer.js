@@ -1,8 +1,8 @@
 import {
   ADD_STUDENT,
-  DELETE_STUDENT,
   SET_SELECTED,
   UPDATE_STUDENT,
+  DELETE_STUDENT,
 } from "../types/studentType";
 
 const DEFAULT_STATE = {
@@ -10,7 +10,7 @@ const DEFAULT_STATE = {
   selected: null,
 };
 
-const stringify = localStorage.getItem("studentList");
+const stringify = localStorage.getItem("STUDENT_LIST");
 if (stringify) {
   DEFAULT_STATE.studentList = JSON.parse(stringify);
 }
@@ -18,9 +18,10 @@ if (stringify) {
 export const studentReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case ADD_STUDENT: {
+      action.payload.id = Date.now();
       state.studentList = [...state.studentList, action.payload];
 
-      localStorage.setItem("studentList", JSON.stringify(state.studentList));
+      localStorage.setItem("STUDENT_LIST", JSON.stringify(state.studentList));
 
       break;
     }
@@ -31,28 +32,11 @@ export const studentReducer = (state = DEFAULT_STATE, action) => {
       break;
     }
 
-    case DELETE_STUDENT: {
-      const data = [...state.studentList];
-
-      const index = data.findIndex(
-        (element) => (element.id = action.payload.id)
-      );
-
-      data.splice(index, 1);
-
-      state.studentList = data;
-      state.selected = null;
-
-      localStorage.setItem("studentList", JSON.stringify(state.studentList));
-
-      break;
-    }
-
     case UPDATE_STUDENT: {
       const data = [...state.studentList];
 
       const index = data.findIndex(
-        (element) => (element.id = action.payload.id)
+        (element) => element.id === action.payload.id
       );
 
       data[index] = action.payload;
@@ -60,8 +44,28 @@ export const studentReducer = (state = DEFAULT_STATE, action) => {
       state.studentList = data;
       state.selected = null;
 
-      localStorage.setItem("studentList", JSON.stringify(state.studentList));
+      localStorage.setItem("STUDENT_LIST", JSON.stringify(state.studentList));
+
+      break;
+    }
+
+    case DELETE_STUDENT: {
+      const data = [...state.studentList];
+
+      const index = data.findIndex(
+        (element) => element.id === action.payload.id
+      );
+
+      data.splice(index, 1);
+
+      state.studentList = data;
+      state.selected = null;
+
+      localStorage.setItem("STUDENT_LIST", JSON.stringify(state.studentList));
+
+      break;
     }
   }
+
   return { ...state };
 };
