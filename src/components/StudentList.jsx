@@ -10,6 +10,7 @@ class StudentList extends Component {
   renderContent = () => {
     let data = this.props.studentList.filter((element) => {
       return (
+        element.fullname &&
         element.fullname
           .toLowerCase()
           .indexOf(this.state.keyword.toLowerCase()) !== -1
